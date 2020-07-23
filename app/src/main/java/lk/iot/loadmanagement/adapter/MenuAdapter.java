@@ -84,7 +84,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuAdapterVie
                             context.startActivity( cIntent );
                             break;
 
-                            case "Customer Information":
+                            case "Customer Info":
                             Intent adIntent = new Intent( context, CustomerInfo.class );
                             adIntent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
                             context.startActivity( adIntent );

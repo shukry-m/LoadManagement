@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,21 +23,24 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import lk.iot.loadmanagement.R;
-import lk.iot.loadmanagement.helper.Network;
+import lk.iot.loadmanagement.data.HomeApplianceDAO;
 
 public class RegisterActivity extends AppCompatActivity {
-    public static final String TAG = "TAG";
     EditText mFullName,mEmail,mPassword,mPhone;
     Button mRegisterBtn;
-    TextView mLoginBtn;
-    FirebaseAuth fAuth;
+    TextView mLoginBtn,textView2;
     ProgressBar progressBar;
+    public static final String TAG = "TAG";
+    FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
 
@@ -51,6 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
         mPhone      = findViewById(R.id.phone);
         mRegisterBtn= findViewById(R.id.registerBtn);
         mLoginBtn   = findViewById(R.id.createText);
+        textView2   = findViewById(R.id.textView2);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -126,6 +131,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d(TAG, "onSuccess: user Profile is created for "+ userID);
+                                    insertDataToFirebase();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -155,6 +161,147 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+
+    private void insertDataToFirebase() {
+        userID = (fAuth.getCurrentUser()!= null)? fAuth.getCurrentUser().getUid():"0";
+        DocumentReference documentReference1 = fStore.collection("users").document(userID).collection("Appliances").document("1");
+        Map<String,Object> appliance1 = new HashMap<>();
+        appliance1.put("H_ID","1");
+        appliance1.put("H_LABEL","Kitchen Lights");
+        appliance1.put("T_5_TO_8","0");
+        appliance1.put("T_8_TO_17","0");
+        appliance1.put("T_17_TO_22","0");
+        appliance1.put("T_22_TO_5","0");
+        appliance1.put("M_STATUS","0");
+        documentReference1.set(appliance1).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "onSuccess: Appliances 1 created for "+ userID);
+                new HomeApplianceDAO(RegisterActivity.this).insert("1",userID,"Kitchen Lights",
+                        "0","0","0","0","0");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: " + e.toString());
+            }
+        });
+
+        DocumentReference documentReference2 = fStore.collection("users").document(userID).collection("Appliances").document("2");
+        Map<String,Object> appliance2 = new HashMap<>();
+        appliance2.put("H_ID","2");
+        appliance2.put("H_LABEL","Kitchen Fan");
+        appliance2.put("T_5_TO_8","0");
+        appliance2.put("T_8_TO_17","0");
+        appliance2.put("T_17_TO_22","0");
+        appliance2.put("T_22_TO_5","0");
+        appliance2.put("M_STATUS","0");
+        documentReference2.set(appliance2).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "onSuccess: Appliances 2 created for "+ userID);
+                new HomeApplianceDAO(RegisterActivity.this).insert("2",userID,"Kitchen Fan",
+                        "0","0","0","0","0");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: " + e.toString());
+            }
+        });
+
+        DocumentReference documentReference3 = fStore.collection("users").document(userID).collection("Appliances").document("3");
+        Map<String,Object> appliance3 = new HashMap<>();
+        appliance3.put("H_ID","3");
+        appliance3.put("H_LABEL","Dining Room Lights");
+        appliance3.put("T_5_TO_8","0");
+        appliance3.put("T_8_TO_17","0");
+        appliance3.put("T_17_TO_22","0");
+        appliance3.put("T_22_TO_5","0");
+        appliance3.put("M_STATUS","0");
+        documentReference3.set(appliance3).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                  Log.d(TAG, "onSuccess: Appliances 3 created for "+ userID);
+                new HomeApplianceDAO(RegisterActivity.this).insert("3",userID,"Dining Room Lights",
+                        "0","0","0","0","0");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: " + e.toString());
+            }
+        });
+
+        DocumentReference documentReference4 = fStore.collection("users").document(userID).collection("Appliances").document("4");
+        Map<String,Object> appliance4 = new HashMap<>();
+        appliance4.put("H_ID","4");
+        appliance4.put("H_LABEL","Dining Room Fans");
+        appliance4.put("T_5_TO_8","0");
+        appliance4.put("T_8_TO_17","0");
+        appliance4.put("T_17_TO_22","0");
+        appliance4.put("T_22_TO_5","0");
+        appliance4.put("M_STATUS","0");
+        documentReference4.set(appliance4).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                 Log.d(TAG, "onSuccess: Appliances 4 created for "+ userID);
+                new HomeApplianceDAO(RegisterActivity.this).insert("4",userID,"Dining Room Fans",
+                        "0","0","0","0","0");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: " + e.toString());
+            }
+        });
+
+        DocumentReference documentReference5 = fStore.collection("users").document(userID).collection("Appliances").document("5");
+        Map<String,Object> appliance5 = new HashMap<>();
+        appliance5.put("H_ID","5");
+        appliance5.put("H_LABEL","Living Room Lights");
+        appliance5.put("T_5_TO_8","0");
+        appliance5.put("T_8_TO_17","0");
+        appliance5.put("T_17_TO_22","0");
+        appliance5.put("T_22_TO_5","0");
+        appliance5.put("M_STATUS","0");
+        documentReference5.set(appliance5).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                  Log.d(TAG, "onSuccess: Appliances 5 created for "+ userID);
+                new HomeApplianceDAO(RegisterActivity.this).insert("5",userID,"Living Room Lights",
+                        "0","0","0","0","0");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: " + e.toString());
+            }
+        });
+
+        DocumentReference documentReference6 = fStore.collection("users").document(userID).collection("Appliances").document("6");
+        Map<String,Object> appliance6 = new HashMap<>();
+        appliance6.put("H_ID","6");
+        appliance6.put("H_LABEL","Living Room Fans");
+        appliance6.put("T_5_TO_8","0");
+        appliance6.put("T_8_TO_17","0");
+        appliance6.put("T_17_TO_22","0");
+        appliance6.put("T_22_TO_5","0");
+        appliance6.put("M_STATUS","0");
+        documentReference6.set(appliance6).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                  Log.d(TAG, "onSuccess: Appliances 6 created for "+ userID);
+                new HomeApplianceDAO(RegisterActivity.this).insert("6",userID,"Living Room Fans",
+                        "0","0","0","0","0");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: " + e.toString());
+            }
+        });
+    }
 
     @Override
     public void onBackPressed() {

@@ -12,7 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/verifyMsg"
@@ -64,6 +64,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:hint="Your Name"
+            android:inputType="textPersonName"
             android:textColorHint="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -79,6 +80,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:hint="Your Email Address"
+            android:inputType="textEmailAddress"
             android:textColorHint="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -93,6 +95,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:hint="Phone Number"
+            android:inputType="phone"
             android:textColorHint="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -198,6 +201,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:hint="Your Street"
+            android:inputType="textPersonName"
             android:textColorHint="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -235,6 +239,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:hint="Your City"
+            android:inputType="textPersonName"
             android:textColorHint="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -271,6 +276,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:hint="Your Province"
+            android:inputType="textPersonName"
             android:textColorHint="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -307,6 +313,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:hint="Your Zip Code"
+            android:inputType="numberDecimal"
             android:textColorHint="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -321,11 +328,13 @@
             android:layout_marginStart="84dp"
             android:layout_marginTop="14dp"
             android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
             android:layout_weight="1"
             android:background="@drawable/button_click_red"
             android:text="Cancel"
             android:onClick="Cancel"
             android:textStyle="bold"
+            android:layout_marginBottom="10dp"
             app:layout_constraintRight_toLeftOf="@+id/btnSave"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profileZip" />

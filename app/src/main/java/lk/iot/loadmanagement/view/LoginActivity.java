@@ -1,8 +1,5 @@
 package lk.iot.loadmanagement.view;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,9 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import lk.iot.loadmanagement.R;
-import lk.iot.loadmanagement.helper.CustomMessage;
-import lk.iot.loadmanagement.helper.Network;
-import lk.iot.loadmanagement.model.HomeAppliance;
 import lk.iot.loadmanagement.model.User;
 
 public class LoginActivity extends AppCompatActivity {

@@ -1,5 +1,6 @@
 package lk.iot.loadmanagement.view;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,14 +13,27 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.model.DocumentCollections;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -33,9 +47,14 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 import lk.iot.loadmanagement.R;
 import lk.iot.loadmanagement.adapter.MenuAdapter;
+import lk.iot.loadmanagement.data.FirebaseDAO;
+import lk.iot.loadmanagement.data.HomeApplianceDAO;
 import lk.iot.loadmanagement.model.HomeAppliance;
 import lk.iot.loadmanagement.model.MyMenu;
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
     MenuAdapter adapter;
     Drawer result = null;
     AccountHeader headerResult = null;
+    public static final String TAG = "TAG";
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
         mToolBar =  findViewById( R.id.tb_main );
         mToolBar.setTitle( "Home" );
         mToolBar.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
 
 
         rvMenuItem = (RecyclerView) findViewById( R.id.rvMenuItem );
@@ -61,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new GridLayoutManager( MainActivity.this, 2, RecyclerView.VERTICAL, false );
         rvMenuItem.setLayoutManager( layoutManager );
         rvMenuItem.setHasFixedSize( true );
-        String[] menuLabels = {"Appliance", "Manual Control", "Schedule", "Cost & Power","Customer Information"};
+        String[] menuLabels = {"Appliance", "Manual Control", "Schedule", "Cost & Power","Customer Info"};
         insertNavigationDrawer( savedInstanceState );
 
         int[] menuImages = {
@@ -81,9 +105,23 @@ public class MainActivity extends AppCompatActivity {
         }
         adapter = new MenuAdapter( getApplicationContext(), arrayList );
         rvMenuItem.setAdapter( adapter );
+
+
+        System.out.println("33333");
+
+         new FirebaseDAO(MainActivity.this).downloadAllFromFireBase();
+      //  new FirebaseDAO(MainActivity.this).insertToFirebase("PQR");
+
+
+//link
+
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new FirebaseDAO(MainActivity.this).downloadAllFromFireBase();
+    }
 
     private void insertNavigationDrawer(Bundle savedInstanceState) {
         headerResult = new AccountHeaderBuilder()

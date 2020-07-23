@@ -5,9 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,16 +16,14 @@ import java.util.ArrayList;
 import lk.iot.loadmanagement.R;
 import lk.iot.loadmanagement.helper.ClickListener;
 import lk.iot.loadmanagement.model.HomeAppliance;
-import lk.iot.loadmanagement.model.ManualControlItem;
-import lk.iot.loadmanagement.view.ManualControl;
 
 public class ManualControlAdapter extends RecyclerView.Adapter<ManualControlAdapter.ManualControlAdapterViewHolder> {
 
     Context context;
-    ArrayList<ManualControlItem> list;
+    ArrayList<HomeAppliance> list;
     ClickListener listener;
 
-    public ManualControlAdapter(Context context, ArrayList<ManualControlItem>list, ClickListener listener){
+    public ManualControlAdapter(Context context, ArrayList<HomeAppliance>list, ClickListener listener){
         this.context = context;
         this.list = list;
         this.listener=listener;
@@ -42,9 +38,9 @@ public class ManualControlAdapter extends RecyclerView.Adapter<ManualControlAdap
 
     @Override
     public void onBindViewHolder(@NonNull ManualControlAdapterViewHolder holder, int position) {
-       ManualControlItem manualControlItem = list.get(position);
-        holder.switch_home.setText(manualControlItem.getHomeApplianceName());
-        boolean res = manualControlItem.getMA_HA_STATUS() == 1;
+       HomeAppliance manualControlItem = list.get(position);
+        holder.switch_home.setText(manualControlItem.getH_LABEL());
+        boolean res = manualControlItem.getM__STATUS().equals("1");
         holder.switch_home.setChecked(res);
     }
 

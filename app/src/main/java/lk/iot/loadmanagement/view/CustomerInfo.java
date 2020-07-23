@@ -125,7 +125,7 @@ public class CustomerInfo extends AppCompatActivity {
     public void Save(View view) {
 
         if(fullName.getText().toString().isEmpty() || email.getText().toString().isEmpty() || phone.getText().toString().isEmpty()){
-           CustomMessage.displayStatusMessage("One or Many fields are empty",3,3,CustomerInfo.this);
+           CustomMessage.displayStatusMessage("FullName, Email , Phone Number Fields are required",3,3,CustomerInfo.this);
             return;
         }
 
@@ -145,6 +145,7 @@ public class CustomerInfo extends AppCompatActivity {
                 edited.put("street",street.getText().toString());
                 edited.put("province",province.getText().toString());
                 edited.put("zip", zip.getText().toString());
+
 
                 docRef.update(edited).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

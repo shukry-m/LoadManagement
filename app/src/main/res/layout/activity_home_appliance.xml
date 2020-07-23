@@ -48,11 +48,11 @@
     <EditText
         android:layout_margin="10dp"
         android:id="@+id/Data"
-
         android:fontFamily="@font/aclonica"
         android:textColor="@color/black"
         android:textColorHint="@color/black"
         android:padding="10dp"
+        android:textSize="15sp"
         android:layout_weight="8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

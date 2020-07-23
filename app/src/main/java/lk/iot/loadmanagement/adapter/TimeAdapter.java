@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,9 +15,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import lk.iot.loadmanagement.R;
-import lk.iot.loadmanagement.data.HomeApplianceTimeDAO;
+import lk.iot.loadmanagement.data.HomeApplianceDAO;
 import lk.iot.loadmanagement.helper.ClickListener;
-import lk.iot.loadmanagement.model.HomeAplianceTime;
 import lk.iot.loadmanagement.model.HomeAppliance;
 
 public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.TimeAdapterViewHolder> {
@@ -26,11 +24,13 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.TimeAdapterVie
         Context context;
         ArrayList<HomeAppliance> list;
         ClickListener listener;
+        String userId;
 
-        public TimeAdapter(Context context, ArrayList<HomeAppliance>list, ClickListener listener){
+        public TimeAdapter(Context context,String userId, ArrayList<HomeAppliance>list, ClickListener listener){
             this.context = context;
             this.list = list;
             this.listener=listener;
+            this.userId = userId;
         }
 
         @NonNull
@@ -42,37 +42,37 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.TimeAdapterVie
 
         @Override
         public void onBindViewHolder(TimeAdapterViewHolder holder, int position) {
-            HomeAppliance homeAppliance = list.get(position);
-            holder.txtRoom.setText(homeAppliance.getName());
-            HomeAplianceTime hm = new HomeApplianceTimeDAO(this.context).getHomeAppliance(homeAppliance.getId());
+            HomeAppliance hm = list.get(position);
+            holder.txtRoom.setText(hm.getH_LABEL());
+          //  HomeAppliance hm = new HomeApplianceDAO(this.context).get(homeAppliance.getH_ID(),userId);
             holder.check.setChecked(false);
 
             System.out.println("* "+this.context.getClass().getSimpleName());
 
             switch (this.context.getClass().getSimpleName()){
                 case "Appliance_1":{
-                    if(hm.getT_5_TO_8()==1){
+                    if(hm.getT_5_TO_8().equals("1")){
                         holder.check.setChecked(true);
                     }
                 }
                 break;
                 case "Appliance_2":
                 {
-                    if(hm.getT_8_TO_17()==1){
+                    if(hm.getT_8_TO_17().equals("1")){
                         holder.check.setChecked(true);
                     }
                 }
                 break;
                 case "Appliance_3":
                 {
-                    if(hm.getT_17_TO_22()==1){
+                    if(hm.getT_17_TO_22().equals("1")){
                         holder.check.setChecked(true);
                     }
                 }
                 break;
                 case "Appliance_4":
                 {
-                    if(hm.getT_22_TO_5()==1){
+                    if(hm.getT_22_TO_5().equals("1")){
                         holder.check.setChecked(true);
                     }
                 }

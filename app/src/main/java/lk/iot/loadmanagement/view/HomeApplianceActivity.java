@@ -17,12 +17,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import lk.iot.loadmanagement.R;
 import lk.iot.loadmanagement.adapter.HomeApplianceAdapter;
+import lk.iot.loadmanagement.data.FirebaseDAO;
 import lk.iot.loadmanagement.data.HomeApplianceDAO;
 import lk.iot.loadmanagement.helper.ClickListener;
+import lk.iot.loadmanagement.helper.Network;
 import lk.iot.loadmanagement.model.HomeAppliance;
 
 public class HomeApplianceActivity extends AppCompatActivity {
@@ -30,6 +37,10 @@ public class HomeApplianceActivity extends AppCompatActivity {
     HomeApplianceAdapter adapter;
     ArrayList<HomeAppliance> list;
     Toolbar toolbar_home_app;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    String userID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +51,13 @@ public class HomeApplianceActivity extends AppCompatActivity {
          toolbar_home_app = findViewById(R.id.tb_home_appl);
 
          toolbar_home_app.setTitle("Home Appliance");
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        userID = (fAuth.getCurrentUser()!= null)? fAuth.getCurrentUser().getUid():"0";
+     //   list = new HomeApplianceDAO(HomeApplianceActivity.this).getAll();
 
-        list = new HomeApplianceDAO(HomeApplianceActivity.this).getAll();
+        list =new HomeApplianceDAO(HomeApplianceActivity.this).getAll(userID);
+
 
          adapter = new HomeApplianceAdapter(HomeApplianceActivity.this,list,new ClickListener(){
 
@@ -74,18 +90,33 @@ public class HomeApplianceActivity extends AppCompatActivity {
                 if(Data.getText().toString().equals("")){
                     displayStatusMessage("Please Enter a Home Appliance",2,2,null);
                 }else {
-                    insertData(Data.getText().toString());
-                    Data.setText("");
-                    setAdapter();
+                    if(Network.isNetworkAvailable(HomeApplianceActivity.this)){
+                        insertData(Data.getText().toString(),list.size());
+                        Data.setText("");
+                        setAdapter();
+                    }else{
+                        displayStatusMessage("Please Check your Internet Connection",3,3,null);
+                    }
+
                 }
             }
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent( getApplicationContext(), ApplianceActivity.class );
+        intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+        startActivity( intent );
+        finish();
+    }
+
 
 
     private void setAdapter() {
-        list = new HomeApplianceDAO(HomeApplianceActivity.this).getAll();
+        String userId = (fAuth.getCurrentUser()!= null)? fAuth.getCurrentUser().getUid():"0";
+      //  list = new HomeApplianceDAO(HomeApplianceActivity.this).getAll();
+        list = new HomeApplianceDAO(HomeApplianceActivity.this).getAll(userId);
         adapter = new HomeApplianceAdapter(HomeApplianceActivity.this,list,new ClickListener(){
 
             @Override
@@ -105,16 +136,19 @@ public class HomeApplianceActivity extends AppCompatActivity {
             }
         });
         rvHomeItem.setAdapter(adapter);
+     //   adapter.notifyItemInserted(list.size()-1);
     }
 
-    private void insertData(String DataItem) {
-        int y = new HomeApplianceDAO(HomeApplianceActivity.this).insert(DataItem);
-        System.out.println(y);
+    private void insertData(String DataItem,int listSize) {
+
+         new FirebaseDAO(HomeApplianceActivity.this).insertToFirebase(DataItem);
+      //  System.out.println(y);
+        adapter.notifyItemInserted(listSize);
        // getData();
     }
 
-   /* private void getData() {
-        ArrayList<HomeAppliance> list = new HomeApplianceDAO(HomeApplianceActivity.this).getAll();
+    private void getData() {
+        ArrayList<HomeAppliance> list = new HomeApplianceDAO(HomeApplianceActivity.this).getAll(userID);
         for(HomeAppliance h:list){
             System.out.println("****************");
             System.out.println(h);
@@ -122,7 +156,6 @@ public class HomeApplianceActivity extends AppCompatActivity {
         }
 
     }
-*/
     @Override
     protected void onResume() {
         super.onResume();
@@ -192,9 +225,10 @@ public class HomeApplianceActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (id==0){
 
-                      new HomeApplianceDAO(HomeApplianceActivity.this).deleteHomeAppliance(hm.getId());
+                   //   new HomeApplianceDAO(HomeApplianceActivity.this).deleteHomeAppliance(hm.getId());
+                      new FirebaseDAO(HomeApplianceActivity.this).deleteFirebaseHomeAppliance(hm.getH_ID());
                     setAdapter();
-
+                    adapter.notifyItemRemoved(Integer.parseInt(hm.getH_ID()));
                     alertDialog.dismiss();
                 }else{
                     tvCancel.setVisibility(View.INVISIBLE);

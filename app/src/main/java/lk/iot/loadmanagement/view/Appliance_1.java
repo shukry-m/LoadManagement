@@ -11,12 +11,15 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 
 import lk.iot.loadmanagement.R;
 import lk.iot.loadmanagement.adapter.TimeAdapter;
+import lk.iot.loadmanagement.data.FirebaseDAO;
 import lk.iot.loadmanagement.data.HomeApplianceDAO;
-import lk.iot.loadmanagement.data.HomeApplianceTimeDAO;
 import lk.iot.loadmanagement.helper.ClickListener;
 import lk.iot.loadmanagement.model.HomeAppliance;
 
@@ -26,6 +29,9 @@ public class Appliance_1 extends AppCompatActivity {
     TimeAdapter adapter;
     ArrayList<HomeAppliance> list;
     Toolbar tb_appliance1;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +41,24 @@ public class Appliance_1 extends AppCompatActivity {
         tb_appliance1 = findViewById(R.id.tb_appliance1);
 
         tb_appliance1.setTitle("Home Appliances");
-        list = new HomeApplianceDAO(Appliance_1.this).getAll();
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        userID = (fAuth.getCurrentUser()!= null)? fAuth.getCurrentUser().getUid():"0";
 
-        adapter = new TimeAdapter(Appliance_1.this,list,new ClickListener(){
+        list = new HomeApplianceDAO(Appliance_1.this).getAll(userID);
+
+        adapter = new TimeAdapter(Appliance_1.this,userID,list,new ClickListener(){
 
             @Override
             public void onCheckedChanged(int position, CompoundButton cb, boolean on) {
                 HomeAppliance hm = list.get(position);
                 System.out.println(hm);
 
-                Toast.makeText(Appliance_1.this,list.get(position).getName()+" : "+on,Toast.LENGTH_LONG).show();
-                int res = on ? 1 : 0;
+                Toast.makeText(Appliance_1.this,list.get(position).getH_LABEL()+" : "+on,Toast.LENGTH_LONG).show();
+                String res = on ? "1" : "0";
                 System.out.println("* hm "+hm+" res "+res);
-                new HomeApplianceTimeDAO(Appliance_1.this).insert(1,list.get(position).getId(),res);
+
+                new FirebaseDAO(Appliance_1.this).UpdateTimeToFirebase(1,list.get(position).getH_ID(),res);
             }
 
             @Override
@@ -74,5 +85,14 @@ public class Appliance_1 extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent( getApplicationContext(), ApplianceActivity.class );
+        intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+        startActivity( intent );
+        finish();
+    }
+
 
 }

@@ -42,7 +42,7 @@ public class HomeApplianceAdapter  extends RecyclerView.Adapter<HomeApplianceAda
     @Override
     public void onBindViewHolder(@NonNull HomeApplianceViewHolder holder, int position) {
        HomeAppliance homeAppliance = list.get(position);
-        holder.txtItem.setText(homeAppliance.getName());
+        holder.txtItem.setText(homeAppliance.getH_LABEL());
 
     }
 

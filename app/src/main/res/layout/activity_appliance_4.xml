@@ -96,7 +96,7 @@
                     android:background="@drawable/button_click"
                     android:padding="12dp"
                     android:onClick="Save"
-                    android:text="Save" />
+                    android:text="Done" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
