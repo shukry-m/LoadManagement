@@ -106,10 +106,14 @@ public class FirebaseDAO {
 
     //############################### INSERT ##############################
 
-    public void insertToFirebase(final String label_name) {
+    public int insertToFirebase(final String label_name) {
 
         userID = (fAuth.getCurrentUser()!= null)? fAuth.getCurrentUser().getUid():"0";
+        new HomeApplianceDAO(context).insert(label_name,userID);
         final int[] h_id = {0};
+        final int[] id = {2};
+        //insertToLocalDb
+
         fStore.collection("users").document(userID).collection("Appliances").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -130,16 +134,18 @@ public class FirebaseDAO {
 
                             }
                            // Log.d(TAG, "max "+ max);
-                            insertData(list.get(0),label_name);
+                            id[0] = insertData(list.get(0),label_name);
                             Log.d(TAG, list.toString());
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
+        return id[0];
     }
 
-    private void insertData(final int newID , final String label_name) {
+    private int insertData(final int newID , final String label_name) {
+       // new HomeApplianceDAO(context).insert(label_name, newID+"",userID);
         DocumentReference documentReference1 = fStore.collection("users").document(userID).collection("Appliances").document( newID+"");
         Map<String,Object> appliance1 = new HashMap<>();
         appliance1.put("H_ID", newID+"");
@@ -162,6 +168,7 @@ public class FirebaseDAO {
                 Log.d(TAG, "onFailure: " + e.toString());
             }
         });
+        return newID;
     }
 
     //############################### UPDATE ################
@@ -236,6 +243,7 @@ public class FirebaseDAO {
     public void deleteFirebaseHomeAppliance(final String h_id) {
 
         userID = (fAuth.getCurrentUser()!= null)? fAuth.getCurrentUser().getUid():"0";
+        new HomeApplianceDAO(context).deleteHomeAppliance(h_id+"",userID);
         fStore.collection("users").document(userID).collection("Appliances").document(h_id).delete().addOnSuccessListener(
                 new OnSuccessListener<Void>() {
                     @Override

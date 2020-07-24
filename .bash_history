@@ -42,3 +42,34 @@ user.name
 git user.name
 git push -u origin master
 git config --global --edit
+git status
+git init
+echo "# LoadManagement" >> README.md
+git add .
+git commit -m "init"
+git remote add origin https://github.com/shukry-m/LoadManagement.git
+git push -u origin master
+git push -u origin master
+git pull
+git push -u origin master
+git status
+git add
+git add .
+
+git push -u origin master
+git pull origin master
+git push -u origin master
+git status
+git status
+git history
+git init
+git pull -u origin master
+git pull -f origin master
+git pull https://github.com/shukry-m/LoadManagement master
+git status
+git add .
+git commit -m "initial"
+git status
+git remote add origin https://github.com/shukry-m/LoadManagement.git
+git push -u origin master
+git status

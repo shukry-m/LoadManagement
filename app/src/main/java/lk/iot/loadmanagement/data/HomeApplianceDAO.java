@@ -118,21 +118,89 @@ public class HomeApplianceDAO {
 
         try {
 
-            ContentValues values = new ContentValues();
-            values.put(dbHelper.H_ID, h_id);
-            values.put(dbHelper.H_LABEL, label_name);
-            values.put(dbHelper.USER_ID, userID);
-            values.put(dbHelper.T_5_TO_8, "0");
-            values.put(dbHelper.T_8_TO_17, "0");
-            values.put(dbHelper.T_17_TO_22, "0");
-            values.put(dbHelper.T_22_TO_5, "0");
-            values.put(dbHelper.M_STATUS, "0");
+            String select = "SELECT * FROM " + dbHelper.TABLE_HOME_APPLIANCE + " WHERE " + dbHelper.H_ID + " = " + h_id;
 
-            count = (int) dB.insert(dbHelper.TABLE_HOME_APPLIANCE, null, values);
+            Log.v("Query", select);
 
-            if(count>0){
-                System.out.println("* inserted");
+            Cursor cur_s = dB.rawQuery(select, null);
+
+            if (cur_s.getCount() == 0) {
+                //insert
+                ContentValues values = new ContentValues();
+                values.put(dbHelper.H_ID, h_id);
+                values.put(dbHelper.H_LABEL, label_name);
+                values.put(dbHelper.USER_ID, userID);
+                values.put(dbHelper.T_5_TO_8, "0");
+                values.put(dbHelper.T_8_TO_17, "0");
+                values.put(dbHelper.T_17_TO_22, "0");
+                values.put(dbHelper.T_22_TO_5, "0");
+                values.put(dbHelper.M_STATUS, "0");
+
+                count = (int) dB.insert(dbHelper.TABLE_HOME_APPLIANCE, null, values);
+
+                if(count>0){
+                    System.out.println("* inserted "+count);
+                }
+            }else{
+                //update
+                ContentValues values = new ContentValues();
+                values.put(dbHelper.H_LABEL, label_name);
+                values.put(dbHelper.USER_ID, userID);
+
+                count = (int) dB.update(dbHelper.TABLE_HOME_APPLIANCE, values, dbHelper.H_ID + " =?", new String[]{h_id });
+
+                if(count>0){
+                    System.out.println("* updated");
+                }
             }
+
+
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            dB.close();
+        }
+        return count;
+    }
+
+    public int insert(String label_name,String userID) {
+        int count =0;
+
+        if(dB == null){
+            open();
+        }else if(!dB.isOpen()){
+            open();
+        }
+
+        try {
+
+            String query = "SELECT "+dbHelper.H_ID+" FROM "+dbHelper.TABLE_HOME_APPLIANCE+" ORDER BY "+dbHelper.H_ID+" DESC LIMIT 1";
+            Cursor c = dB.rawQuery(query,null);
+            if (c != null && c.moveToFirst()) {
+                String lastId = c.getString(0);
+                int h_id = Integer.parseInt(lastId)+1;
+
+
+                //insert
+                ContentValues values = new ContentValues();
+                values.put(dbHelper.H_ID, h_id);
+                values.put(dbHelper.H_LABEL, label_name);
+                values.put(dbHelper.USER_ID, userID);
+                values.put(dbHelper.T_5_TO_8, "0");
+                values.put(dbHelper.T_8_TO_17, "0");
+                values.put(dbHelper.T_17_TO_22, "0");
+                values.put(dbHelper.T_22_TO_5, "0");
+                values.put(dbHelper.M_STATUS, "0");
+
+                count = (int) dB.insert(dbHelper.TABLE_HOME_APPLIANCE, null, values);
+
+                if(count>0){
+                    System.out.println("* inserted "+count);
+                }
+            }
+
+
 
         }catch (Exception e) {
             e.printStackTrace();

@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -64,7 +65,7 @@ public class HomeApplianceActivity extends AppCompatActivity {
              @Override
              public void onPositionClicked(int position, View view) {
                  HomeAppliance hm = list.get(position);
-                 displayStatusMessage("Do you want to remove this Item",3,0,hm);
+                 displayStatusMessage("Do you want to remove this Item",3,0,hm,position);
 
              }
 
@@ -82,20 +83,54 @@ public class HomeApplianceActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager( HomeApplianceActivity.this,  RecyclerView.VERTICAL, false );
         rvHomeItem.setLayoutManager( layoutManager );
         rvHomeItem.setHasFixedSize( true );
+
         rvHomeItem.setAdapter(adapter);
+
+
+        class Task implements Runnable {
+            @Override
+            public void run() {
+                for (int i = 0; i <= 10; i++) {
+                    final int value = i;
+                    System.out.println("* "+i);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            }
+
+        }
+
 
         Add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(Data.getText().toString().equals("")){
-                    displayStatusMessage("Please Enter a Home Appliance",2,2,null);
+                    displayStatusMessage("Please Enter a Home Appliance",2,2,null,0);
                 }else {
                     if(Network.isNetworkAvailable(HomeApplianceActivity.this)){
-                        insertData(Data.getText().toString(),list.size());
+                          insertData(Data.getText().toString(),list.size());
                         Data.setText("");
-                        setAdapter();
+
+                        //new Thread(new Task()).start();
+//
+//                        try {
+//                            Thread.sleep(1000);
+//                            setAdapter();
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+                     //   setAdapter();
+                        //rvHomeItem.setAdapter(adapter);
+//                        adapter.notify();
+                        adapter.notifyDataSetChanged();
+  //                      adapter.notifyAll();
                     }else{
-                        displayStatusMessage("Please Check your Internet Connection",3,3,null);
+                        displayStatusMessage("Please Check your Internet Connection",3,3,null,0);
                     }
 
                 }
@@ -114,15 +149,18 @@ public class HomeApplianceActivity extends AppCompatActivity {
 
 
     private void setAdapter() {
+
+
         String userId = (fAuth.getCurrentUser()!= null)? fAuth.getCurrentUser().getUid():"0";
       //  list = new HomeApplianceDAO(HomeApplianceActivity.this).getAll();
+
         list = new HomeApplianceDAO(HomeApplianceActivity.this).getAll(userId);
         adapter = new HomeApplianceAdapter(HomeApplianceActivity.this,list,new ClickListener(){
 
             @Override
             public void onPositionClicked(int position, View view) {
                 HomeAppliance hm = list.get(position);
-                displayStatusMessage("Do you want to remove this Item",3,0,hm);
+                displayStatusMessage("Do you want to remove this Item",3,0,hm,position);
             }
 
             @Override
@@ -135,15 +173,24 @@ public class HomeApplianceActivity extends AppCompatActivity {
 
             }
         });
+       // adapter.notifyItemInserted(list.size()-1);
+
+     //   rvHomeItem.removeAllViews();
         rvHomeItem.setAdapter(adapter);
-     //   adapter.notifyItemInserted(list.size()-1);
+
+       // rvHomeItem.invalidate();
+
+           adapter.notifyDataSetChanged();
     }
 
     private void insertData(String DataItem,int listSize) {
 
-         new FirebaseDAO(HomeApplianceActivity.this).insertToFirebase(DataItem);
+         int id  =new FirebaseDAO(HomeApplianceActivity.this).insertToFirebase(DataItem);
       //  System.out.println(y);
-        adapter.notifyItemInserted(listSize);
+        adapter.notifyDataSetChanged();
+        if(id>0){
+            setAdapter();
+        }
        // getData();
     }
 
@@ -159,10 +206,13 @@ public class HomeApplianceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setAdapter();
+//        adapter.notify();
         adapter.notifyDataSetChanged();
+//        adapter.notifyAll();
     }
 
-    private void displayStatusMessage(String s, int colorValue, final int id, final HomeAppliance hm) {
+    private void displayStatusMessage(String s, int colorValue, final int id, final HomeAppliance hm, final int position) {
 
         AlertDialog.Builder builder = null;
         View view = null;
@@ -225,10 +275,10 @@ public class HomeApplianceActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (id==0){
 
-                   //   new HomeApplianceDAO(HomeApplianceActivity.this).deleteHomeAppliance(hm.getId());
                       new FirebaseDAO(HomeApplianceActivity.this).deleteFirebaseHomeAppliance(hm.getH_ID());
+
                     setAdapter();
-                    adapter.notifyItemRemoved(Integer.parseInt(hm.getH_ID()));
+
                     alertDialog.dismiss();
                 }else{
                     tvCancel.setVisibility(View.INVISIBLE);

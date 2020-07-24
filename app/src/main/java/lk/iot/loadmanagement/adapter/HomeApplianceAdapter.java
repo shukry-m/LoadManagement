@@ -54,6 +54,11 @@ public class HomeApplianceAdapter  extends RecyclerView.Adapter<HomeApplianceAda
         return 0;
     }
 
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+
     public static class HomeApplianceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView txtItem;
@@ -71,7 +76,8 @@ public class HomeApplianceAdapter  extends RecyclerView.Adapter<HomeApplianceAda
 
         @Override
         public void onClick(View v) {
-            listenerRef.get().onPositionClicked(getAdapterPosition(),v);
+            listenerRef.get()
+                    .onPositionClicked(getAdapterPosition(),v);
         }
     }
 }
