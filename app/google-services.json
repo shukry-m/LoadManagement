@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "928990698062",
-    "firebase_url": "https://loadmanagement-2aa2a.firebaseio.com",
-    "project_id": "loadmanagement-2aa2a",
-    "storage_bucket": "loadmanagement-2aa2a.appspot.com"
+    "project_number": "959959650530",
+    "firebase_url": "https://loadmangementrealdb.firebaseio.com",
+    "project_id": "loadmangementrealdb",
+    "storage_bucket": "loadmangementrealdb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:928990698062:android:972511be242e6e912a011f",
+        "mobilesdk_app_id": "1:959959650530:android:a9e9f91bba7bd3cf93cebb",
         "android_client_info": {
-          "package_name": "lk.iot.loadmanagement"
+          "package_name": "lk.iot.lmsApp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "928990698062-l3dhka1hur5v7ij80i7u51mlrbcmssg6.apps.googleusercontent.com",
+          "client_id": "959959650530-3v8usdketa4pmnf7v4qtfevfcfl2ijov.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAGWgu6mrHxDPCIs8Descw5jyKV78Wfa6k"
+          "current_key": "AIzaSyCY5COjLFyoXQROPMuEffOTZoEKhNzXDco"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "928990698062-l3dhka1hur5v7ij80i7u51mlrbcmssg6.apps.googleusercontent.com",
+              "client_id": "959959650530-3v8usdketa4pmnf7v4qtfevfcfl2ijov.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

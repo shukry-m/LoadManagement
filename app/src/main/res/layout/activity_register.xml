@@ -108,6 +108,7 @@
         android:fontFamily="@font/aclonica"
         android:padding="10dp"
         android:textColor="#FFFFFF"
+        android:maxLength="10"
         android:textColorHint="#FFFFFF"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
